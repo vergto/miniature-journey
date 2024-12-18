@@ -1,0 +1,7 @@
+---
+galaxy_info:
+  author: vergto
+  description: Установка указанного пакета
+  license: MIT
+  min_ansible_version: 2.9
+dependencies: []

@@ -1,0 +1,7 @@
+---
+- name: MC | Install packages
+  ansible.builtin.package:
+    name: "{{ mc_package_name }}"
+    state: present
+
+
