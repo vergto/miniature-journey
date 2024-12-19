@@ -1,0 +1,35 @@
+---
+- name: Setup SSH keys for passwordless access
+  hosts: localhost
+  tasks:
+    - name: Check if SSH key already exists
+      stat:
+        path: ~/.ssh/id_rsa
+      register: ssh_key_check
+
+    - name: Generate an SSH key if it doest exist
+      command: ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa -q -N ""
+      when: not ssh_key_check.stat.exists
+
+- name: Distribute SSH key to app group
+  hosts: vm
+  gather_facts: no
+  tasks:
+    - name: Ensure the .ssh directory exists on the target machine
+      file:
+        path: ~/.ssh
+        state: directory
+        mode: '0700'
+
+    - name: Copy the public key to the target machine
+      ansible.builtin.copy:
+        src: ~/.ssh/id_rsa.pub
+        dest: ~/.ssh/authorized_keys
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0600'
+
+    - name: Ensure correct permissions for authorized_keys
+      file:
+        path: ~/.ssh/authorized_keys
+        mode: '0600'
