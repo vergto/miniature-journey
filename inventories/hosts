@@ -1,2 +1,4 @@
 [app]
-10.10.10.1
+172.20.10.2
+[app:vars]
+ansible_user = sysadm
